@@ -1,0 +1,8 @@
+platform_id,publication_id,metric,value,window_start,window_end,source
+video,clip,views,140,2026-11-20,2026-11-21,demo
+video,clip,views,150,2026-11-20,2026-11-21,demo
+video,clip,views,not-a-number,2026-11-20,2026-11-22,demo
+video,unknown,views,7,2026-11-20,2026-11-21,demo
+video,clip,views,280,2026-11-20,2026-11-27,demo
+video,,followers,100,2026-11-20,2026-11-20,demo
+video,,followers,112,2026-11-27,2026-11-27,demo
