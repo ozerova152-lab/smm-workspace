@@ -23,6 +23,9 @@ export const platformCatalog: readonly PlatformDraft[] = [
   { name: 'Telegram', formats: ['Пост', 'Опрос'], metrics: ['Просмотры', 'Подписчики'], checklist: ['Проверить текст и ссылки'] },
   { name: 'ВКонтакте', formats: ['Пост', 'Короткое видео'], metrics: ['Охват', 'Реакции'], checklist: ['Проверить обложку'] },
   { name: 'YouTube', formats: ['Видео', 'Короткое видео'], metrics: ['Просмотры', 'Подписчики'], checklist: ['Проверить заголовок и обложку'] },
+  { name: 'Instagram', formats: ['Пост', 'Карусель', 'Видео'], metrics: ['Охват', 'Подписчики'], checklist: ['Проверить визуал'] },
+  { name: 'Pinterest', formats: ['Пин', 'Видео'], metrics: ['Просмотры', 'Сохранения'], checklist: ['Проверить изображение и ссылку'] },
+  { name: 'LinkedIn', formats: ['Пост', 'Видео'], metrics: ['Показы', 'Реакции'], checklist: ['Проверить текст и ссылку'] },
 ]
 
 const exampleProjects: Project[] = [

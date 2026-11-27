@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Alert, Badge, Box, Button, Group, List as MantineList, Loader, Modal, Paper, ScrollArea, Select, SimpleGrid, Stack, Table, Tabs, Text, Textarea, TextInput, Title } from '@mantine/core'
+import { Alert, Badge, Box, Button, Drawer, Group, List as MantineList, Loader, Menu, Modal, Paper, ScrollArea, Select, SimpleGrid, Stack, Table, Tabs, Text, Textarea, TextInput, Title } from '@mantine/core'
 import { CalendarDays, ChevronLeft, ChevronRight, Columns3, List, Plus } from 'lucide-react'
 import { CardAnalytics } from './analytics-screen'
 import { StrategyDialog } from './strategy-dialog'
@@ -92,9 +92,15 @@ export function ContentPlan({ project, workspace, initialPlatformId, initialCard
     <Group justify="space-between" align="start">
       <Title order={2}>Контент-план</Title>
       {load === 'ready' && !archived && <Group gap="xs">
-        <Button variant="subtle" onClick={() => setStrategyOpen(true)}>Стратегия</Button>
-        <Button variant="subtle" onClick={() => openAnalytics(platformId || undefined)}>Аналитика</Button>
-        <Button variant="light" onClick={() => setTemplateOpen(true)}>Выбрать шаблон</Button>
+        <Menu position="bottom-end" withinPortal>
+          <Menu.Target><Button variant="light">Ещё</Button></Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item onClick={() => setStrategyOpen(true)}>Стратегия</Menu.Item>
+            <Menu.Item onClick={() => openAnalytics(platformId || undefined)}>Аналитика</Menu.Item>
+            <Menu.Item onClick={() => setTemplateOpen(true)}>Выбрать шаблон</Menu.Item>
+            <Menu.Item onClick={() => { setArchived(true); setKind('') }}>Архив</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
         <Button leftSection={<Plus size={16} aria-hidden />} onClick={() => setEditor({ draft: newCard('Идея', { platformId: platformId || undefined }) })}>Добавить идею</Button>
       </Group>}
     </Group>
@@ -103,23 +109,14 @@ export function ContentPlan({ project, workspace, initialPlatformId, initialCard
       <Text>Не удалось открыть план. Повторите попытку</Text>
       <Button variant="light" onClick={() => { setLoad('loading'); setRetry(retry + 1) }}>Повторить попытку</Button>
     </Stack></Alert>}
-    {load === 'ready' && <Paper withBorder p="md">
+    {load === 'ready' && <Paper withBorder p="md" className="content-plan-panel">
       <Stack gap="md">
-        <Group gap="xs" aria-label="Быстрый выбор площадки">
-          {[{ id: '', name: 'Все площадки' }, ...project.platforms].map(platform => <Button
-            key={platform.id || 'all'} size="xs" variant={platformId === platform.id ? 'filled' : 'light'}
-            aria-label={platform.id ? 'Показать ' + platform.name : 'Показать все площадки'}
-            aria-pressed={platformId === platform.id}
-            onClick={() => setPlatformId(platform.id)}>{platform.name}</Button>)}
-        </Group>
         <Group justify="space-between" align="end">
           <Group align="end" gap="sm">
-            <Select label="Площадка" value={platformId} onChange={value => setPlatformId(value ?? '')}
-              data={[{ value: '', label: 'Все площадки' }, ...project.platforms.map(platform => ({ value: platform.id, label: platform.name }))]} allowDeselect={false} />
             {!archived && <Select label="Тип работы" value={kind} onChange={value => setKind(value ?? '')}
               data={[{ value: '', label: 'Все типы' }, ...['Идея', 'Публикация', ...materialKinds].map(value => ({ value, label: value }))]} allowDeselect={false} />}
           </Group>
-          <Button variant="subtle" onClick={() => { setArchived(!archived); setKind('') }}>{archived ? 'Вернуться к плану' : 'Архив'}</Button>
+          {archived && <Button variant="subtle" onClick={() => { setArchived(false); setKind('') }}>Вернуться к плану</Button>}
         </Group>
         {archived
           ? <Title order={3} size="h4">Архив публикаций</Title>
@@ -130,8 +127,16 @@ export function ContentPlan({ project, workspace, initialPlatformId, initialCard
               <Tabs.Tab value="calendar" leftSection={<CalendarDays size={15} aria-hidden />}>Календарь</Tabs.Tab>
             </Tabs.List>
           </Tabs>}
+        <Group gap="xs" className="project-platform-picker" aria-label="Площадки проекта">
+          {[{ id: '', name: 'Все площадки' }, ...project.platforms].map(platform => <Button
+            key={platform.id || 'all'} size="xs" variant={platformId === platform.id ? 'filled' : 'light'}
+            aria-label={platform.id ? 'Показать ' + platform.name : 'Показать все площадки'}
+            aria-pressed={platformId === platform.id}
+            onClick={() => setPlatformId(platform.id)}>{platform.name}</Button>)}
+        </Group>
         {archiveError && !editor && <Alert color="red" role="alert">Не удалось обновить архив. Повторите попытку.</Alert>}
         {activeView === 'calendar' && <PlanCalendar month={month} setMonth={setMonth} cards={visible} open={selectCard} />}
+        {activeView === 'table' && visible.length > 0 && <Text size="xs" c="dimmed" className="plan-scroll-hint">Прокрутите таблицу вбок, чтобы увидеть все столбцы</Text>}
         {activeView === 'table' && visible.length > 0 && <Table.ScrollContainer minWidth={710}>
           <Table highlightOnHover verticalSpacing="sm">
             <Table.Thead><Table.Tr>{['Дата выхода', 'Тема', 'Площадка', 'Формат', 'Статус', 'Следующий шаг', ...(archived ? ['Действие'] : [])].map(label => <Table.Th key={label}>{label}</Table.Th>)}</Table.Tr></Table.Thead>
@@ -294,7 +299,7 @@ export function CardEditor({ editor, project, related, close, closeLabel = 'К �
     catch { setError('Не удалось сохранить карточку. Введённые данные остались в форме') }
     finally { pending.current = false; setSaving(false) }
   }
-  return <Modal opened onClose={busy ? () => undefined : close} closeOnEscape={!busy} closeOnClickOutside={!busy} title="Карточка" size="lg">
+  return <Drawer opened onClose={busy ? () => undefined : close} closeOnEscape={!busy} closeOnClickOutside={!busy} title="Карточка" position="right" size="lg">
     <Box component="form" onSubmit={submit} noValidate>
       <Stack gap="sm">
         <Group><Badge variant="light">{draft.kind}</Badge>{archived && <Badge color="gray">В архиве</Badge>}</Group>
@@ -341,5 +346,5 @@ export function CardEditor({ editor, project, related, close, closeLabel = 'К �
         {linkMaterial && addChild && <Group gap="xs">{materialKinds.map(kind => <Button key={kind} variant="light" disabled={disabled} onClick={() => addChild(kind)}>{kind}</Button>)}</Group>}
       </Stack>
     </Box>
-  </Modal>
+  </Drawer>
 }

@@ -115,6 +115,14 @@ export function AnalyticsScreen({ project, workspace, demo, platformId, back }: 
   return <Stack gap="md">
     <Text c="dimmed">{project.name}</Text>
     <Title order={2}>Аналитика</Title>
+    <details>
+      <summary>Как добавить данные</summary>
+      <Stack gap="xs" mt="sm">
+        <Text size="sm">Внесите показатели вручную или скачайте шаблон CSV и загрузите заполненный файл. Выберите площадку и проверьте данные перед сохранением.</Text>
+        <Text size="sm">Если у вас есть ИИ-помощник с MCP, он может помочь подготовить CSV из доступных ему показателей. Прямое подключение MCP внутри программы пока не настроено: помощник и приложение не обмениваются данными автоматически.</Text>
+        <Text size="sm">Не добавляйте пароли и ключи доступа в CSV. Пример в демо не сохраняется после обновления страницы.</Text>
+      </Stack>
+    </details>
     <Paper withBorder p="md"><Stack>
       <Group align="end">
         <Select label="Площадка" data={project.platforms.map(item => ({ value: item.id, label: item.name }))} value={platform || null} allowDeselect={false}

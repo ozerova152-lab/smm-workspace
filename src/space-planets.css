@@ -1,0 +1,33 @@
+/* A distant moon from the project's own space artwork, behind the content. */
+.space-distant-planet {
+  position: absolute;
+  z-index: 1;
+  top: 4%;
+  right: 7%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-position: -116px -264px;
+  background-size: 1086px 1448px;
+  background-repeat: no-repeat;
+  filter: grayscale(.85) hue-rotate(170deg) brightness(.7);
+  opacity: .85;
+  animation: distant-planet-drift 10s ease-in-out -2s infinite alternate;
+}
+.space-meteor-third { top: 29%; left: 67%; animation-delay: -7.8s; }
+.space-scene[data-paused="true"] .space-distant-planet { animation-play-state: paused; }
+@keyframes distant-planet-drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-90px, 45px); }
+}
+@media (max-width: 48em) {
+  .space-distant-planet {
+    top: 18%; right: 4%; width: 60px; height: 60px;
+    background-position: -87px -198px;
+    background-size: 815px 1086px;
+    opacity: .75;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .space-distant-planet { animation: none; }
+}

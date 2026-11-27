@@ -1,0 +1,13 @@
+:root {
+  --color-space: #071729;
+  --color-panel: #0a1d2f;
+  --color-text: #e8f6ff;
+  --color-muted: #b7c8d6;
+  --color-primary: #68bdf5;
+  --color-border: #8dbbe64d;
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --space-unit: 8px;
+  --radius-panel: 14px;
+  --radius-control: 9px;
+  --motion-cosmos: 18s;
+}

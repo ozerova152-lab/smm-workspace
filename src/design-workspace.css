@@ -1,0 +1,49 @@
+/* Project workspace: the dashboard keeps its existing layout. */
+.project-mode .launch-main {
+  max-width: none;
+  padding-left: calc(var(--space-unit) * 32);
+  padding-right: clamp(calc(var(--space-unit) * 3), 4vw, calc(var(--space-unit) * 7));
+}
+.project-mode .project-navigation {
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--space-unit) * 28);
+  padding: calc(var(--space-unit) * 17) calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+  background: var(--color-space);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+.project-mode .project-navigation .mantine-Button-root {
+  justify-content: flex-start;
+  min-height: calc(var(--space-unit) * 5.5);
+}
+.project-mode .content-plan-panel {
+  background: var(--color-panel);
+  border-color: var(--color-border);
+  border-radius: var(--radius-panel);
+}
+.project-platform-picker .mantine-Button-root {
+  min-height: calc(var(--space-unit) * 5.5);
+}
+.content-plan-panel .mantine-Table-th { color: var(--color-muted); }
+.plan-scroll-hint { display: none; }
+@media (max-width: 768px) {
+  .plan-scroll-hint { display: block; }
+  .project-mode .launch-main { padding-left: calc(var(--space-unit) * 2); padding-right: calc(var(--space-unit) * 2); }
+  .project-mode .project-navigation {
+    position: static;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}

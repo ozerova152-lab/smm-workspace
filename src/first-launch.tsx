@@ -36,7 +36,7 @@ export function FirstLaunch() {
   }, [view.name])
 
   return (
-    <div className="workspace-preview first-launch">
+    <div className={"workspace-preview first-launch" + ('project' in view && view.project ? " project-mode" : "")}>
       <SpaceScene />
       <Container component="main" size="lg" className="launch-main">
         <Stack gap="xl">
@@ -48,7 +48,7 @@ export function FirstLaunch() {
             <Title order={1} size="h3">SMM Workspace</Title>
             {demo && <Badge variant="light">Демо</Badge>}
           </Group>
-          {'project' in view && view.project && <Group component="nav" aria-label="Навигация проекта" gap="xs">
+          {'project' in view && view.project && <Group component="nav" aria-label="Навигация проекта" className="project-navigation" gap="xs">
             <Button variant="light" size="xs" onClick={() => setView({ name: 'dashboard' })}>Все проекты</Button>
             <Button variant={view.name === 'project' ? 'filled' : 'light'} size="xs"
               onClick={() => setView({ name: 'project', project: view.project })}>Контент-план</Button>

@@ -2,6 +2,8 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { Button } from '@mantine/core'
 import { Pause, Play } from 'lucide-react'
 import galaxyUrl from './assets/workspace-galaxy.png'
+import planetUrl from './assets/space-documentary-dawn.png'
+import './space-planets.css'
 
 const stars = Array.from({ length: 43 }, (_, index) => ({
   x: ((index * 397 + index ** 2 * 13) % 997) / 10,
@@ -29,6 +31,7 @@ export function SpaceScene() {
     <div className="space-scene" data-paused={paused || reducedMotion}>
       <div className="space-art" aria-hidden="true">
         <img className="space-backdrop" src={galaxyUrl} alt="" fetchPriority="high" />
+        <div className="space-distant-planet" style={{ backgroundImage: `url(${planetUrl})` }} />
         {stars.map(({ x, y, size, offset }, index) => (
           <i key={index} className="space-star" style={{
             left: x + '%', top: y + '%', width: size, height: size,
@@ -37,6 +40,7 @@ export function SpaceScene() {
         ))}
         <div className="meteor meteor-first" />
         <div className="meteor meteor-second" />
+        <div className="meteor space-meteor-third" />
       </div>
       {!reducedMotion && (
         <Button

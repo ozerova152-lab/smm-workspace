@@ -161,7 +161,8 @@ test('T03: analytics survives restart, imports atomically and exports selected d
       await addReference(page, selectedReference)
       await addReference(page, excludedReference)
       await button(page, 'К контент-плану').click()
-      await button(page, 'Стратегия').click()
+      await page.getByRole('button', { name: 'Ещё' }).click()
+      await page.getByRole('menuitem', { name: 'Стратегия', exact: true }).click()
       const strategy = dialog(page, 'Стратегия')
       await strategy.getByLabel('Гипотеза').fill(hypothesis)
       await button(strategy, 'Сохранить заметку').click()
@@ -177,7 +178,8 @@ test('T03: analytics survives restart, imports atomically and exports selected d
       const page = await sessionAfterRestart.newPage()
       await openApp(page, host.address + '?state=metrics-error')
       await openProject(page)
-      await button(page, 'Стратегия').click()
+      await page.getByRole('button', { name: 'Ещё' }).click()
+      await page.getByRole('menuitem', { name: 'Стратегия', exact: true }).click()
       const strategy = dialog(page, 'Стратегия')
       await expect(strategy.getByLabel('Гипотеза')).toHaveValue(hypothesis)
       await capture(page, 'strategy-after-restart', strategy)
@@ -290,13 +292,25 @@ test('T03: analytics survives restart, imports atomically and exports selected d
       await button(page, publications[0].name).click()
       await button(card(page), 'Убрать из плана').click()
       await expect(button(page, publications[0].name)).toHaveCount(0)
-      await button(page, 'Архив').click()
+      await page.getByRole('button', { name: 'Ещё' }).click()
+      await page.getByRole('menuitem', { name: 'Архив', exact: true }).click()
       await button(page, publications[0].name).click()
       await expect(card(page).getByText('Обновлено', { exact: true })).toBeVisible()
       await expect(card(page).getByText('160 показов', { exact: true })).toBeVisible()
       await capture(page, 'archived-measurements', card(page))
     } finally {
       await sessionAfterRestart.close()
+    }
+    await host.server.close()
+    host = await startServer(Number(new URL(host.address).port))
+    const finalSession = await chromium.launchPersistentContext(profile)
+    try {
+      const finalPage = await finalSession.newPage()
+      await openApp(finalPage, host.address)
+      const persisted = await readStoredAnalytics(finalPage)
+      expect(persisted.measurements.map(item => item.value).sort((a, b) => a - b)).toEqual([80, 95, 100, 112, 160, 300])
+    } finally {
+      await finalSession.close()
     }
   } finally {
     await host.server.close()
