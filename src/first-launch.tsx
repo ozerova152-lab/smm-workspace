@@ -40,6 +40,9 @@ export function FirstLaunch() {
       <SpaceScene />
       <Container component="main" size="lg" className="launch-main">
         <Stack gap="xl">
+          {!demo && window.location.hostname === '127.0.0.1' && window.location.port !== '3000' && <Alert role="status" color="orange" title="Открыт другой адрес">
+            Проекты с адреса 127.0.0.1:3000 здесь автоматически не появятся. Для переноса скачайте резервную копию на прежнем адресе и восстановите её здесь. Используйте этот же адрес при следующем запуске.
+          </Alert>}
           <Group gap="sm">
             <span className="workspace-mark" aria-hidden="true"><Orbit size={24} /></span>
             <Title order={1} size="h3">SMM Workspace</Title>
